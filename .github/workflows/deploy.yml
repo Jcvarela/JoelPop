@@ -22,8 +22,18 @@ jobs:
         with:
           node-version: 20
           cache: npm
+
+      - uses: actions/configure-pages@v5
+
       - run: npm ci
       - run: npm run build
+
+      # Ensure GitHub Pages doesn't ignore _next assets
+      - name: Add .nojekyll
+        run: |
+          mkdir -p ./out
+          touch ./out/.nojekyll
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
@@ -38,4 +48,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
