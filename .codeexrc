@@ -1,0 +1,166 @@
+{
+  "name": "frontend-monorepo",
+  "language": "typescript",
+  "framework": "nextjs-app-router",
+  "runtime": {
+    "node": ">=20.0.0",
+    "packageManager": "pnpm"
+  },
+  "paths": {
+    "@/*": [
+      "src/*"
+    ]
+  },
+  "sourceDir": "src",
+  "appDir": "src/app",
+  "formatting": {
+    "tool": "prettier",
+    "config": {
+      "printWidth": 100,
+      "singleQuote": true,
+      "trailingComma": "all",
+      "semi": true
+    }
+  },
+  "linting": {
+    "tool": "eslint",
+    "extends": [
+      "next/core-web-vitals",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react-hooks/recommended",
+      "plugin:jsx-a11y/recommended"
+    ],
+    "rules": {
+      "@typescript-eslint/consistent-type-imports": "error",
+      "react/jsx-no-useless-fragment": "warn",
+      "jsx-a11y/anchor-is-valid": "warn"
+    }
+  },
+  "typescript": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true
+  },
+  "ui": {
+    "libraries": [
+      "mui-grid-v2",
+      "fluent-ui-v9"
+    ],
+    "styling": {
+      "strategy": "styles.ts",
+      "filePattern": "*.styles.ts",
+      "noCssFiles": true,
+      "noInlineStyles": true,
+      "allowInlineWhenDynamic": true
+    },
+    "components": {
+      "dirPattern": "src/components/<Feature>",
+      "files": [
+        "<Feature>.tsx",
+        "<Feature>.styles.ts",
+        "<Feature>.test.tsx",
+        "<Feature>.stories.tsx"
+      ],
+      "naming": {
+        "components": "PascalCase",
+        "files": "PascalCase",
+        "hooks": "useCamelCase"
+      }
+    }
+  },
+  "testing": {
+    "unit": {
+      "framework": "jest",
+      "rtl": true,
+      "coverageThreshold": {
+        "global": {
+          "lines": 80,
+          "branches": 70
+        }
+      }
+    },
+    "e2e": {
+      "framework": "playwright"
+    },
+    "setupFiles": [
+      "<rootDir>/jest.setup.ts"
+    ]
+  },
+  "accessibility": {
+    "enableAxeChecks": true,
+    "lint": true
+  },
+  "i18n": {
+    "enabled": false,
+    "defaultLocale": "en"
+  },
+  "git": {
+    "commitConvention": "conventional",
+    "requireSignedCommits": false,
+    "hooks": {
+      "pre-commit": [
+        "lint:staged",
+        "typecheck"
+      ],
+      "commit-msg": [
+        "commitlint -E HUSKY_GIT_PARAMS"
+      ]
+    }
+  },
+  "tasks": {
+    "bootstrap": [
+      "pnpm add -D typescript @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint prettier eslint-config-prettier eslint-plugin-prettier eslint-plugin-react-hooks eslint-plugin-jsx-a11y",
+      "pnpm add -D jest @types/jest ts-jest @testing-library/react @testing-library/jest-dom",
+      "pnpm add -D playwright",
+      "pnpm add @mui/material @mui/icons-material @mui/lab @mui/material-next @fluentui/react-components"
+    ],
+    "scaffold:component": {
+      "description": "Create a component with styles, test, and story",
+      "inputs": [
+        "FeatureName"
+      ],
+      "files": [
+        {
+          "path": "src/components/<FeatureName>/<FeatureName>.tsx",
+          "template": "reactComponent"
+        },
+        {
+          "path": "src/components/<FeatureName>/<FeatureName>.styles.ts",
+          "template": "stylesTs"
+        },
+        {
+          "path": "src/components/<FeatureName>/<FeatureName>.test.tsx",
+          "template": "rtlTest"
+        },
+        {
+          "path": "src/components/<FeatureName>/<FeatureName>.stories.tsx",
+          "template": "storybook"
+        }
+      ]
+    }
+  },
+  "enforcement": {
+    "requirePassingScripts": [
+      "typecheck",
+      "lint",
+      "test"
+    ],
+    "onGenerate": {
+      "useAbsoluteImports": true,
+      "respectAlias": "@/*"
+    },
+    "disallow": [
+      "new-css-files",
+      "inline-style-literals",
+      "non-strict-tsconfig",
+      "default-export-components"
+    ]
+  },
+  "ignore": [
+    "**/dist/**",
+    "**/.next/**",
+    "**/coverage/**",
+    "**/*.snap"
+  ]
+}
